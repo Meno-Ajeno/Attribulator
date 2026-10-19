@@ -23,6 +23,13 @@ namespace Attribulator.API.Serialization
         private static readonly Dictionary<(string, string), VltClassField> FieldCache =
             new Dictionary<(string, string), VltClassField>();
 
+        /// <summary>
+        ///     When true, arrays are not checked against the maximum size (<see cref="VltClassField.MaxCount" />) of their class
+        ///     field when data is deserialized. Databases made with other tools (for example VltEd) can contain arrays larger than
+        ///     that, and they can only be loaded and saved again with this set.
+        /// </summary>
+        public bool AllowOversizedArrays { get; set; }
+
         /// <inheritdoc />
         public abstract SerializedDatabaseInfo LoadInfo(string sourceDirectory);
 

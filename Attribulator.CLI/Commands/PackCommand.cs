@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Attribulator.API.Data;
 using Attribulator.API.Exceptions;
 using Attribulator.API.Plugin;
+using Attribulator.API.Serialization;
 using Attribulator.API.Services;
 using Attribulator.CLI.Build;
 using CommandLine;
@@ -44,6 +45,11 @@ namespace Attribulator.CLI.Commands
         [UsedImplicitly]
         public bool MakeBackup { get; set; }
 
+        [Option("allow-oversized-arrays",
+            HelpText = "Do not reject arrays that are larger than the maximum size of their class field")]
+        [UsedImplicitly]
+        public bool AllowOversizedArrays { get; set; }
+
         public override void SetServiceProvider(IServiceProvider serviceProvider)
         {
             base.SetServiceProvider(serviceProvider);
@@ -66,6 +72,9 @@ namespace Attribulator.CLI.Commands
             if (storageFormat == null)
                 throw new CommandException(
                     $"Cannot find storage format that is compatible with directory [{InputDirectory}].");
+
+            if (storageFormat is BaseStorageFormat baseStorageFormat)
+                baseStorageFormat.AllowOversizedArrays = AllowOversizedArrays;
 
 
             // Parallel hash check
