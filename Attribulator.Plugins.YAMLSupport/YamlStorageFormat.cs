@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -317,9 +317,11 @@ namespace Attribulator.Plugins.YAMLSupport
             if (capacity < rawItemList.Count)
                 throw new InvalidDataException(
                     $"In collection {vltCollection.ShortPath}, the capacity of array field [{field.Name}] ({capacity}) is less than the number of elements in the array ({rawItemList.Count}).");
-            if (field.MaxCount > 0 && (capacity > field.MaxCount || rawItemList.Count > field.MaxCount))
-                throw new InvalidDataException(
-                    $"In collection {vltCollection.ShortPath}, the size or capacity of array field [{field.Name}] is greater than the allowed size ({field.MaxCount}).");
+            // local change: the Overhaul (made with VltEd) has arrays larger than the class's MaxCount (e.g. trafficpattern.Vehicles 10 of 6);
+            // the check is skipped so that such a database can be packed again.
+            // if (field.MaxCount > 0 && (capacity > field.MaxCount || rawItemList.Count > field.MaxCount))
+            //     throw new InvalidDataException(
+            //         $"In collection {vltCollection.ShortPath}, the size or capacity of array field [{field.Name}] is greater than the allowed size ({field.MaxCount}).");
             array.Capacity = capacity;
             array.Items = new List<VLTBaseType>();
             array.ItemAlignment = field.Alignment;
